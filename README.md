@@ -11,12 +11,10 @@ This project builds a machine learning-based system that predicts future food de
 The system follows a simple pipeline:
 
 1️⃣ Data Preparation
-
 Multiple datasets such as meal details, fulfillment center information, and historical orders are combined into a single dataset.
 Unnecessary noise is removed, and the data is prepared for modeling.
 
 2️⃣ Learning Demand Patterns
-
 Instead of using raw data directly, the system creates meaningful features such as:
 
 Previous week demand (lag features)
@@ -27,7 +25,6 @@ Time-based patterns
 These features help the model understand how demand evolves over time.
 
 3️⃣ Model Training
-
 Different machine learning models are trained and compared:
 
 Random Forest
@@ -37,7 +34,6 @@ LightGBM
 Each model learns how different factors affect food demand.
 
 4️⃣ Model Evaluation
-
 The models are tested using standard regression metrics like:
 
 MAE (average error)
@@ -71,21 +67,31 @@ This shows that machine learning can significantly improve decision-making in fo
 
 # Tech Stack
 Python (core logic)
+
 Pandas & NumPy (data handling)
+
 Scikit-learn, CatBoost, LightGBM (modeling)
+
 Jupyter Notebook (development)
+
 HTML/CSS (frontend interface)
 
 # What Makes This Project Useful
 Helps reduce food wastage
+
 Improves inventory planning
+
 Supports data-driven decisions
+
 Provides a simple web interface for predictions
 
 # Future Improvements
 Add real-time data integration
+
 Include external factors like weather or holidays
+
 Try deep learning models (LSTM)
+
 Deploy as a complete web application
 
 # Final Note
