@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About | Smart Food Demand Forecasting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0b0f0e;
+            --surface:   #111715;
+            --card:      #161d1b;
+            --border:    rgba(255,255,255,0.07);
+            --accent:    #2dff8f;
+            --accent2:   #00c9ff;
+            --text:      #e8f0ec;
+            --muted:     #7a9087;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 68px;
+            background: rgba(11,15,14,0.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav { display: flex; gap: 0.25rem; }
+
+        nav a {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover, nav a.active { color: var(--text); background: rgba(255,255,255,0.06); }
+        nav a.active { color: var(--accent); }
+
+        .btn-primary {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+            padding: 140px 5rem 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45,255,143,0.1) 0%, transparent 70%);
+            top: 0; right: 10%;
+            pointer-events: none;
+        }
+
+        .page-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .page-hero h1 {
+            font-family: var(--font-head);
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .page-hero h1 em {
+            font-style: normal;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            font-weight: 300;
+            max-width: 580px;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 5rem;
+        }
+
+        /* ── CONTENT ── */
+        .about-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 5rem 5rem;
+        }
+
+        /* two-column layout for main content */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .about-card:hover {
+            border-color: rgba(45,255,143,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+        }
+        .about-card:hover::before { opacity: 1; }
+
+        /* full-width card */
+        .about-card.full { grid-column: span 2; }
+
+        .card-icon {
+            font-size: 1.5rem;
+            width: 2.75rem;
+            height: 2.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(45,255,143,0.08);
+            border-radius: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .about-card h2 {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .about-card p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* ── HIGHLIGHT BOX ── */
+        .highlight-box {
+            background: rgba(45,255,143,0.05);
+            border: 1px solid rgba(45,255,143,0.18);
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem;
+            margin-top: 1rem;
+        }
+        .highlight-box p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        /* ── LISTS ── */
+        .about-card ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            margin-top: 0.25rem;
+        }
+        .about-card ul li {
+            font-size: 0.875rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .about-card ul li::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* ── MODELS STRIP ── */
+        .models-strip {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .model-badge {
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.45rem 1rem;
+            border-radius: 100px;
+            border: 1px solid rgba(45,255,143,0.25);
+            background: rgba(45,255,143,0.07);
+            color: var(--accent);
+            letter-spacing: 0.03em;
+        }
+
+        /* ── VISION FULL-WIDTH ── */
+        .vision-card {
+            background: linear-gradient(135deg, rgba(45,255,143,0.06) 0%, rgba(0,201,255,0.06) 100%);
+            border: 1px solid rgba(45,255,143,0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            grid-column: span 2;
+        }
+        .vision-card h2 {
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .vision-card p { font-size: 0.95rem; color: var(--muted); max-width: 580px; margin: 0 auto; font-weight: 300; }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note-section {
+            text-align: center;
+            padding: 0 5rem 4rem;
+        }
+        .footer-note {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-style: italic;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        /* ── BACK BUTTON ── */
+        .back-home {
+            text-align: center;
+            padding-bottom: 5rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.6rem;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .home-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer p { font-size: 0.8rem; color: var(--muted); }
+        .footer-logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .page-tag  { animation: fadeUp 0.5s ease both 0.1s; }
+        .page-hero h1 { animation: fadeUp 0.6s ease both 0.2s; }
+        .page-hero p  { animation: fadeUp 0.6s ease both 0.3s; }
+
+        @media (max-width: 900px) {
+            .navbar { padding: 0 1.5rem; }
+            nav { display: none; }
+            .page-hero { padding: 100px 1.5rem 3rem; }
+            .divider { margin: 0 1.5rem; }
+            .about-container { padding: 2.5rem 1.5rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            .about-card.full, .vision-card { grid-column: span 1; }
+            .footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.5rem; }
+            .footer-note-section { padding: 0 1.5rem 3rem; }
+            .back-home { padding-bottom: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="index.html" class="logo">FoodDemandAI</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="howItWorks.html">How It Works</a>
+            <a href="contact.html">Contact</a>
+            <a href="learnMore.html">Learn More</a>
+        </nav>
+        <a href="#" class="btn-primary">Get Started →</a>
+    </header>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="page-tag">About This Project</div>
+        <h1>Smart Food Demand <em>Forecasting</em></h1>
+        <p>
+            Developed as a Machine Learning & Deep Learning based forecasting system
+            for improved supply chain optimization.
+        </p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="about-container">
+        <div class="about-grid">
+
+            <!-- What We Do -->
+            <div class="about-card full">
+                <div class="card-icon">🎯</div>
+                <h2>What We Do</h2>
+                <p>
+                    Smart Food Demand Forecasting is a machine learning and deep learning–based
+                    system designed to accurately predict food demand in meal delivery services.
+                    Since food products are perishable, incorrect demand prediction can result in
+                    overstocking, wastage, or shortages. Our platform provides intelligent forecasting
+                    solutions to improve supply chain planning and operational efficiency.
+                </p>
+            </div>
+
+            <!-- The Problem -->
+            <div class="about-card">
+                <div class="card-icon">⚠️</div>
+                <h2>The Problem</h2>
+                <p>
+                    Existing platforms such as BlueYonder, SAP IBP, Oracle Demantra, and Infor
+                    Demand Management rely largely on traditional statistical models.
+                    These models often fail to capture complex temporal patterns in meal demand,
+                    leading to inefficiencies in inventory management.
+                </p>
+            </div>
+
+            <!-- Our Approach -->
+            <div class="about-card">
+                <div class="card-icon">🔬</div>
+                <h2>Our Approach</h2>
+                <p>
+                    This project proposes a time series–based forecasting approach using
+                    regressor-based machine learning and deep learning models.
+                    The system is trained using the Food Demand Forecasting dataset released
+                    by Genpact, which includes:
+                </p>
+                <ul>
+                    <li>Historical weekly meal order data</li>
+                    <li>Fulfillment center information</li>
+                    <li>Pricing and promotional details</li>
+                    <li>Categorical attributes</li>
+                </ul>
+                <div class="highlight-box">
+                    <p>
+                        Temporal dependencies are captured by formulating the forecasting problem
+                        as a supervised regression task using lag-based features and
+                        Exponentially Weighted Moving Averages (EWMA).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Models -->
+            <div class="about-card">
+                <div class="card-icon">🤖</div>
+                <h2>Models Implemented</h2>
+                <div class="models-strip">
+                    <div class="model-badge">Random Forest</div>
+                    <div class="model-badge">CatBoost</div>
+                    <div class="model-badge">LightGBM</div>
+                </div>
+                <p style="margin-top: 1rem;">
+                    Experimental results demonstrate that ensemble machine learning models such as
+                    Random Forest, CatBoost, and LightGBM provide accurate and stable food demand predictions.
+                </p>
+            </div>
+
+            <!-- Why Choose Us -->
+            <div class="about-card">
+                <div class="card-icon">✅</div>
+                <h2>Why Choose Our Solution?</h2>
+                <ul>
+                    <li>Accurate time-series forecasting</li>
+                    <li>Reduced food wastage</li>
+                    <li>Improved supply chain decision-making</li>
+                    <li>Data-driven inventory planning</li>
+                    <li>Advanced machine learning models</li>
+                </ul>
+            </div>
+
+            <!-- Vision -->
+            <div class="vision-card">
+                <h2>Our Vision</h2>
+                <p>
+                    To build intelligent, data-driven systems that reduce food wastage,
+                    enhance operational efficiency, and promote sustainable supply chain management.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div class="footer-note-section">
+        <span class="footer-note">
+            Developed as a Machine Learning & Deep Learning based forecasting system for improved supply chain optimization.
+        </span>
+    </div>
+
+    <!-- BACK HOME -->
+    <div class="back-home">
+        <a href="index.html" class="home-btn">← Go to Home</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">FoodDemandAI</div>
+        <p>© 2026 FoodDemandAI · Time Series Forecasting Project</p>
+        <p>Contact: yourmail@example.com</p>
+    </footer>
+
+</body>
+</html>

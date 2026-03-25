@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learn More | Smart Food Demand Forecasting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0b0f0e;
+            --surface:   #111715;
+            --card:      #161d1b;
+            --border:    rgba(255,255,255,0.07);
+            --accent:    #2dff8f;
+            --accent2:   #00c9ff;
+            --text:      #e8f0ec;
+            --muted:     #7a9087;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.75;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 68px;
+            background: rgba(11,15,14,0.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav { display: flex; gap: 0.25rem; }
+
+        nav a {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        nav a.active { color: var(--accent); background: rgba(45,255,143,0.06); }
+
+        .btn-nav {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+            padding: 140px 5rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            width: 550px; height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45,255,143,0.08) 0%, transparent 70%);
+            top: -60px; right: 5%;
+            pointer-events: none;
+        }
+        .page-hero::after {
+            content: '';
+            position: absolute;
+            width: 350px; height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,201,255,0.07) 0%, transparent 70%);
+            bottom: 0; left: -60px;
+            pointer-events: none;
+        }
+
+        .page-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.5s ease both 0.05s;
+        }
+
+        .page-hero h1 {
+            font-family: var(--font-head);
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.55s ease both 0.15s;
+        }
+        .page-hero h1 em {
+            font-style: normal;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            font-weight: 300;
+            max-width: 560px;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.55s ease both 0.25s;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 5rem;
+        }
+
+        /* ── CONTENT ── */
+        .learn-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4.5rem 5rem 5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* ── SECTION CARD ── */
+        .section-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2.25rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            animation: fadeUp 0.6s ease both;
+        }
+        .section-card:nth-child(1) { animation-delay: 0.1s; }
+        .section-card:nth-child(2) { animation-delay: 0.18s; }
+        .section-card:nth-child(3) { animation-delay: 0.26s; }
+        .section-card:nth-child(4) { animation-delay: 0.34s; }
+        .section-card:nth-child(5) { animation-delay: 0.42s; }
+        .section-card:nth-child(6) { animation-delay: 0.50s; }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .section-card:hover {
+            border-color: rgba(45,255,143,0.2);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+        }
+        .section-card:hover::before { opacity: 1; }
+
+        /* card header row */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-icon {
+            font-size: 1.3rem;
+            width: 2.75rem; height: 2.75rem;
+            background: rgba(45,255,143,0.08);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-card h2 {
+            font-family: var(--font-head);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* two-column layout for wider cards */
+        .card-body-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .section-card p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 300;
+            line-height: 1.75;
+            margin-bottom: 0.75rem;
+        }
+        .section-card p:last-child { margin-bottom: 0; }
+
+        /* list styling */
+        .section-card ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        .section-card ul li {
+            font-size: 0.875rem;
+            color: var(--muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            font-weight: 300;
+        }
+        .section-card ul li::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            margin-top: 0.55rem;
+        }
+
+        /* highlight box */
+        .highlight-box {
+            background: rgba(45,255,143,0.05);
+            border: 1px solid rgba(45,255,143,0.15);
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--muted);
+            font-weight: 300;
+            line-height: 1.65;
+        }
+
+        /* model badges row */
+        .model-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .model-badge {
+            font-family: var(--font-head);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            border: 1px solid rgba(45,255,143,0.25);
+            background: rgba(45,255,143,0.07);
+            color: var(--accent);
+            letter-spacing: 0.03em;
+        }
+        .model-badge.lstm {
+            border-color: rgba(0,201,255,0.25);
+            background: rgba(0,201,255,0.07);
+            color: var(--accent2);
+        }
+
+        /* ── BACK HOME ── */
+        .back-home {
+            text-align: center;
+            padding-bottom: 5rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.6rem;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .home-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer p { font-size: 0.8rem; color: var(--muted); }
+        .footer-logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .navbar { padding: 0 1.5rem; }
+            nav { display: none; }
+            .page-hero { padding: 100px 1.5rem 3rem; }
+            .divider { margin: 0 1.5rem; }
+            .learn-container { padding: 3rem 1.5rem; gap: 1.5rem; }
+            .section-card { padding: 1.75rem 1.5rem; }
+            .card-body-cols { grid-template-columns: 1fr; gap: 1rem; }
+            .footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.5rem; }
+            .back-home { padding-bottom: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="index.html" class="logo">FoodDemandAI</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="howItWorks.html">How It Works</a>
+            <a href="contact.html">Contact</a>
+            <a href="learnMore.html" class="active">Learn More</a>
+        </nav>
+        <a href="#" class="btn-nav">Get Started →</a>
+    </header>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="page-tag">In-Depth Overview</div>
+        <h1>Our <em>Forecasting</em> System Explained</h1>
+        <p>A deep dive into the dataset, methodology, models, and business impact behind Smart Food Demand Forecasting.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CONTENT -->
+    <div class="learn-container">
+
+        <!-- Introduction -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-icon">💡</div>
+                <h2>Introduction</h2>
+            </div>
+            <div class="card-body-cols">
+                <p>
+                    Food demand forecasting plays a critical role in modern meal delivery and
+                    supply chain systems. Since food products are perishable, even small
+                    prediction errors can lead to significant losses due to overstocking or
+                    stock shortages. Traditional inventory planning methods often struggle
+                    to adapt to rapidly changing consumer behavior, seasonal patterns,
+                    and promotional impacts.
+                </p>
+                <p>
+                    Our Smart Food Demand Forecasting system addresses these challenges
+                    by applying advanced machine learning and deep learning techniques
+                    to capture complex temporal patterns in food demand data.
+                </p>
+            </div>
+        </div>
+
+        <!-- Limitations -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-icon">⚠️</div>
+                <h2>Limitations of Existing Forecasting Platforms</h2>
+            </div>
+            <div class="card-body-cols">
+                <div>
+                    <p>
+                        Existing enterprise solutions such as BlueYonder, SAP Integrated Business
+                        Planning (SAP IBP), Oracle Demantra, and Infor Demand Management
+                        primarily rely on traditional statistical forecasting approaches.
+                    </p>
+                    <p>While effective for linear trends, these systems often fail to capture:</p>
+                </div>
+                <ul>
+                    <li>Non-linear demand fluctuations</li>
+                    <li>Long-term sequential dependencies</li>
+                    <li>Complex seasonal and promotional effects</li>
+                    <li>Hidden temporal patterns in large datasets</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                As a result, businesses may experience inaccurate forecasts, leading to inefficient inventory decisions.
+            </div>
+        </div>
+
+        <!-- Dataset -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-icon">🗄️</div>
+                <h2>Dataset Description</h2>
+            </div>
+            <div class="card-body-cols">
+                <p>
+                    The system is trained using the Food Demand Forecasting dataset
+                    released by Genpact. This dataset contains comprehensive historical
+                    weekly order data across multiple fulfillment centers.
+                </p>
+                <ul>
+                    <li>Weekly historical meal order quantities</li>
+                    <li>Meal category information</li>
+                    <li>Pricing details</li>
+                    <li>Promotional campaign data</li>
+                    <li>Fulfillment center identifiers</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                The dataset enables modeling both demand trends and the impact of external business factors such as pricing and promotions.
+            </div>
+        </div>
+
+        <!-- Methodology -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-icon">⚙️</div>
+                <h2>Methodology & Feature Engineering</h2>
+            </div>
+            <div class="card-body-cols">
+                <div>
+                    <p>
+                        The forecasting problem is formulated as a supervised regression task.
+                        Temporal dependencies are captured using advanced feature engineering
+                        techniques such as:
+                    </p>
+                    <ul>
+                        <li>Lag-based features</li>
+                        <li>Rolling statistics</li>
+                        <li>Exponentially Weighted Moving Averages (EWMA)</li>
+                    </ul>
+                </div>
+                <p>
+                    These techniques transform raw time-series data into structured inputs
+                    that machine learning and deep learning models can effectively learn from.
+                </p>
+            </div>
+        </div>
+
+        <!-- Models -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-icon">🤖</div>
+                <h2>Models Implemented</h2>
+            </div>
+            <p>Multiple machine learning models are implemented as baseline regression approaches:</p>
+            <div class="model-badges">
+                <span class="model-badge">Random Forest</span>
+                <span class="model-badge">CatBoost</span>
+                <span class="model-badge">LightGBM</span>
+            </div>
+            <p>
+                In future work, a Long Short-Term Memory (LSTM) neural network can be incorporated to capture long-term sequential patterns present in time-series demand data
+            </p>
+            <div class="highlight-box">
+                Experimental results show that ensemble machine learning models such as Random Forest, CatBoost, and LightGBM provide accurate and stable food demand forecasts.
+            </div>
+        </div>
+
+        <!-- Business Impact -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-icon">📈</div>
+                <h2>Business Impact & Benefits</h2>
+            </div>
+            <div class="card-body-cols">
+                <p>
+                    By leveraging machine learning-based forecasting,
+                    the system enables data-driven decision-making across supply
+                    chain operations.
+                </p>
+                <ul>
+                    <li>Reduced food wastage</li>
+                    <li>Optimized inventory planning</li>
+                    <li>Improved fulfillment center efficiency</li>
+                    <li>Better handling of promotional demand spikes</li>
+                    <li>Enhanced sustainability in supply chain management</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BACK HOME -->
+    <div class="back-home">
+        <a href="index.html" class="home-btn">← Go to Home</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">FoodDemandAI</div>
+        <p>© 2026 FoodDemandAI · Time Series Forecasting Project</p>
+        <p>Contact: yourmail@example.com</p>
+    </footer>
+
+</body>
+</html>

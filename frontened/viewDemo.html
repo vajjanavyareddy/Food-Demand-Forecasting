@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Demo | FoodDemandAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0b0f0e;
+            --surface:   #111715;
+            --card:      #161d1b;
+            --border:    rgba(255,255,255,0.07);
+            --accent:    #2dff8f;
+            --accent2:   #00c9ff;
+            --text:      #e8f0ec;
+            --muted:     #7a9087;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 68px;
+            background: rgba(11,15,14,0.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav { display: flex; gap: 0.25rem; }
+
+        nav a {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+
+        .btn-nav {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+            padding: 140px 5rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45,255,143,0.09) 0%, transparent 70%);
+            top: -40px; right: 8%;
+            pointer-events: none;
+        }
+        .page-hero::after {
+            content: '';
+            position: absolute;
+            width: 340px; height: 340px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,201,255,0.07) 0%, transparent 70%);
+            bottom: 0; left: -60px;
+            pointer-events: none;
+        }
+
+        .page-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.5s ease both 0.05s;
+        }
+
+        .page-hero h1 {
+            font-family: var(--font-head);
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.55s ease both 0.15s;
+        }
+        .page-hero h1 em {
+            font-style: normal;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            font-weight: 300;
+            max-width: 520px;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.55s ease both 0.25s;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 5rem;
+        }
+
+        /* ── DEMO LAYOUT ── */
+        .demo-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 5rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+
+        /* ── INPUT CARD ── */
+        .demo-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.25rem;
+            animation: fadeUp 0.6s ease both 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .demo-card h2 {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .field-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
+
+        .field-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        input[type="text"], select {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[readonly] {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9087' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        input:focus { border-color: rgba(45,255,143,0.4); background: rgba(45,255,143,0.04); box-shadow: 0 0 0 3px rgba(45,255,143,0.08); }
+
+        /* run button */
+        .btn-demo {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            padding: 0.9rem 1.5rem;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .btn-demo:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(45,255,143,0.3);
+        }
+        .btn-demo:active { transform: translateY(0); }
+
+        /* spinning loader */
+        .spinner {
+            display: none;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-top-color: #0b0f0e;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── RESULT PANEL ── */
+        .result-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            animation: fadeUp 0.6s ease both 0.3s;
+        }
+
+        /* placeholder state */
+        .result-placeholder {
+            background: var(--card);
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.875rem;
+            font-weight: 300;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            transition: opacity 0.3s;
+        }
+        .result-placeholder .ph-icon {
+            font-size: 2.5rem;
+            opacity: 0.4;
+        }
+
+        /* result card */
+        .result-card {
+            background: var(--card);
+            border: 1px solid rgba(45,255,143,0.2);
+            border-radius: 20px;
+            padding: 2rem 2.25rem;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .result-card h3 {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+        }
+        .metric-item.wide { grid-column: span 2; }
+
+        .metric-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .metric-value {
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-sub {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 400;
+            margin-top: 0.1rem;
+        }
+
+        /* graph box */
+        .graph-box {
+            background: rgba(45,255,143,0.04);
+            border: 1px solid rgba(45,255,143,0.12);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .graph-icon { font-size: 2rem; margin-bottom: 0.6rem; opacity: 0.7; }
+
+        .graph-box p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* mini bar chart simulation */
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 60px;
+            margin: 1rem auto 0.5rem;
+            width: 200px;
+            justify-content: center;
+        }
+        .bar {
+            flex: 1;
+            border-radius: 3px 3px 0 0;
+            background: var(--border);
+            transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .bar.actual { background: rgba(45,255,143,0.5); }
+        .bar.predicted { background: linear-gradient(to top, var(--accent), var(--accent2)); }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            margin-top: 0.75rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+        .legend-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+        .legend-dot.actual { background: rgba(45,255,143,0.5); }
+        .legend-dot.predicted { background: var(--accent2); }
+
+        /* ── BACK HOME ── */
+        .back-home {
+            text-align: center;
+            padding: 1rem 0 5rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.6rem;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .home-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer p { font-size: 0.8rem; color: var(--muted); }
+        .footer-logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes resultIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .navbar { padding: 0 1.5rem; }
+            nav { display: none; }
+            .page-hero { padding: 100px 1.5rem 3rem; }
+            .divider { margin: 0 1.5rem; }
+            .demo-wrapper { grid-template-columns: 1fr; padding: 3rem 1.5rem 2rem; }
+            .footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.5rem; }
+            .back-home { padding: 1rem 0 3rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
+            .metric-item.wide { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="index.html" class="logo">FoodDemandAI</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="howItWorks.html">How It Works</a>
+            <a href="contact.html">Contact</a>
+            <a href="learnMore.html">Learn More</a>
+        </nav>
+        <a href="#" class="btn-nav">Get Started →</a>
+    </header>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="page-tag">Live Preview</div>
+        <h1>Interactive System <em>Demo</em></h1>
+        <p>Configure the inputs below and run a simulated forecast prediction to see how the system works.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- DEMO LAYOUT -->
+    <div class="demo-wrapper">
+
+        <!-- INPUT CARD -->
+        <div class="demo-card">
+            <h2>⚙️ Forecast Parameters</h2>
+            <div class="field-group">
+
+                <div class="field-wrap">
+                    <span class="field-label">Center ID</span>
+                    <input type="text" value="Center_55" readonly>
+                </div>
+
+                <div class="field-wrap">
+                    <span class="field-label">Meal ID / Meal Name</span>
+                    <input type="text" value="Meal_1885 (Veg Biryani)" readonly>
+                </div>
+
+                <div class="field-wrap">
+                    <span class="field-label">Select Forecast Period</span>
+                    <select disabled>
+                        <option selected>Week 145</option>
+                        <option>Month: August 2023</option>
+                        <option>Date: 15-08-2023</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button class="btn-demo" id="runBtn" onclick="showResult()">
+                <span id="btnIcon">▶</span>
+                <span id="btnText">Run Demo Prediction</span>
+                <span class="spinner" id="spinner"></span>
+            </button>
+        </div>
+
+        <!-- RESULT PANEL -->
+        <div class="result-panel">
+
+            <!-- placeholder before run -->
+            <div class="result-placeholder" id="placeholder">
+                <span class="ph-icon">📊</span>
+                <span>Forecast results will appear here after you run the prediction.</span>
+            </div>
+
+            <!-- actual result (hidden initially) -->
+            <div class="result-card" id="resultBox">
+                <h3>🔮 Forecast Result</h3>
+
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-label">Predicted Orders</div>
+                        <div class="metric-value">284</div>
+                        <div class="metric-sub">Units</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Accuracy Level</div>
+                        <div class="metric-value">94.6%</div>
+                        <div class="metric-sub">MAPE-based</div>
+                    </div>
+                    <div class="metric-item wide">
+                        <div class="metric-label">Model Used</div>
+                        <div class="metric-value" style="font-size:1.1rem;">LightGBM</div>
+                    </div>
+                </div>
+
+                <div class="graph-box">
+                    <div class="graph-icon">📈</div>
+                    <div class="chart-bars" id="chartBars"></div>
+                    <div class="chart-legend">
+                        <div class="legend-item"><span class="legend-dot actual"></span>Historical</div>
+                        <div class="legend-item"><span class="legend-dot predicted"></span>Predicted</div>
+                    </div>
+                    <p style="margin-top:0.75rem;">Historical vs Predicted Demand Graph<br>
+                    <span style="font-size:0.75rem;">(Visualization appears here in actual system)</span></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BACK HOME -->
+    <div class="back-home">
+        <a href="index.html" class="home-btn">← Back to Home</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">FoodDemandAI</div>
+        <p>© 2026 FoodDemandAI · Time Series Forecasting Project</p>
+        <p>Contact: yourmail@example.com</p>
+    </footer>
+
+    <script>
+        function showResult() {
+            const btn = document.getElementById('runBtn');
+            const spinner = document.getElementById('spinner');
+            const btnIcon = document.getElementById('btnIcon');
+            const btnText = document.getElementById('btnText');
+
+            // simulate loading
+            btn.disabled = true;
+            btnIcon.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            btnText.textContent = 'Running Prediction…';
+
+            setTimeout(() => {
+                // hide placeholder, show result
+                document.getElementById('placeholder').style.display = 'none';
+                const resultBox = document.getElementById('resultBox');
+                resultBox.style.display = 'block';
+                resultBox.style.animation = 'resultIn 0.45s ease both';
+
+                // animate bars
+                buildChart();
+
+                // reset button
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnIcon.style.display = 'inline';
+                btnText.textContent = 'Run Demo Prediction';
+            }, 1400);
+        }
+
+        function buildChart() {
+            const container = document.getElementById('chartBars');
+            container.innerHTML = '';
+
+            const historical = [38, 52, 45, 60, 55, 70, 65, 58, 72, 68];
+            const predicted  = [74, 80, 78, 85, 90, 84, 88, 92, 87, 95];
+
+            historical.forEach((h, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar actual';
+                bar.style.height = '0px';
+                container.appendChild(bar);
+                setTimeout(() => { bar.style.height = h + '%'; }, i * 60);
+            });
+
+            predicted.forEach((p, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'bar predicted';
+                bar.style.height = '0px';
+                container.appendChild(bar);
+                setTimeout(() => { bar.style.height = p + '%'; }, (historical.length + i) * 60);
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Demand Forecasting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0b0f0e;
+            --surface:   #111715;
+            --card:      #161d1b;
+            --border:    rgba(255,255,255,0.07);
+            --accent:    #2dff8f;
+            --accent2:   #00c9ff;
+            --text:      #e8f0ec;
+            --muted:     #7a9087;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 68px;
+            background: rgba(11,15,14,0.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav { display: flex; gap: 0.25rem; }
+
+        nav a {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover { color: var(--text); background: var(--border); }
+
+        .btn-primary {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.02em;
+            color: #0b0f0e;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        .btn-secondary {
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-secondary:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-1px);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 120px 5rem 5rem;
+            gap: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ambient glow blobs */
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45,255,143,0.12) 0%, transparent 70%);
+            top: -100px; left: -150px;
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,201,255,0.09) 0%, transparent 70%);
+            bottom: -80px; right: 5%;
+            pointer-events: none;
+        }
+
+        .hero-text { position: relative; z-index: 2; }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(45,255,143,0.1);
+            border: 1px solid rgba(45,255,143,0.2);
+            border-radius: 100px;
+            padding: 0.35rem 0.9rem;
+            margin-bottom: 1.75rem;
+        }
+        .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-text h1 {
+            font-family: var(--font-head);
+            font-size: clamp(2.6rem, 4.5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.25rem;
+        }
+        .hero-text h1 em {
+            font-style: normal;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 480px;
+            margin-bottom: 2.25rem;
+            font-weight: 300;
+        }
+
+        .hero-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+        /* hero image panel */
+        .hero-image {
+            position: relative;
+            z-index: 2;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(45,255,143,0.04) 0%, rgba(0,201,255,0.04) 100%);
+            z-index: 1;
+        }
+
+        .hero-image img {
+            width: 100%;
+            display: block;
+            opacity: 0.9;
+            transition: transform 0.5s ease;
+        }
+        .hero-image:hover img { transform: scale(1.02); }
+
+        /* image stats overlay */
+        .img-stats {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(11,15,14,0.95) 0%, transparent 100%);
+            padding: 2rem 1.5rem 1.5rem;
+            z-index: 2;
+            display: flex;
+            gap: 1.5rem;
+        }
+        .stat { text-align: left; }
+        .stat-val {
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-lbl { font-size: 0.7rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+
+        /* ── SECTION BASE ── */
+        .section {
+            padding: 6rem 5rem;
+            position: relative;
+        }
+
+        .section-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .section h2 {
+            font-family: var(--font-head);
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+            line-height: 1.15;
+        }
+
+        .section > p {
+            color: var(--muted);
+            max-width: 620px;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        /* ── WHY SECTION ── */
+        .why-section {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .why-inner {
+            display: block;
+        }
+
+        .why-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 1.5rem; }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1.5rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card);
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .feature-item:hover { border-color: rgba(45,255,143,0.25); transform: translateY(-4px); }
+
+        .feature-icon {
+            font-size: 1.25rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(45,255,143,0.08);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .feature-text strong {
+            font-family: var(--font-head);
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+        .feature-text p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+        .why-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: border-color 0.25s;
+        }
+        .metric-card:hover { border-color: rgba(45,255,143,0.3); }
+        .metric-card:first-child { grid-column: span 2; }
+
+        .metric-num {
+            font-family: var(--font-head);
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .metric-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; font-weight: 500; }
+
+        .metric-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        .metric-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .why-section .section-tag,
+        .why-section h2 { text-align: center; }
+        .why-section .why-intro { text-align: center; max-width: 640px; margin: 0 auto 0; color: var(--muted); font-size: 1rem; font-weight: 300; }
+        .how-section { background: var(--bg); }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .card:hover {
+            border-color: rgba(45,255,143,0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.35);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card-number {
+            font-family: var(--font-head);
+            font-size: 3rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.04);
+            position: absolute;
+            top: 1rem; right: 1.25rem;
+            line-height: 1;
+        }
+
+        .card-icon {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card h3 {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .card p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer p { font-size: 0.8rem; color: var(--muted); }
+        .footer-logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── FADE IN ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge    { animation: fadeUp 0.5s ease both; animation-delay: 0.1s; }
+        .hero-text h1  { animation: fadeUp 0.6s ease both; animation-delay: 0.2s; }
+        .hero-text p   { animation: fadeUp 0.6s ease both; animation-delay: 0.3s; }
+        .hero-buttons  { animation: fadeUp 0.6s ease both; animation-delay: 0.4s; }
+        .hero-image    { animation: fadeUp 0.7s ease both; animation-delay: 0.5s; }
+
+        @media (max-width: 900px) {
+            .navbar { padding: 0 1.5rem; }
+            nav { display: none; }
+            .hero { grid-template-columns: 1fr; padding: 100px 1.5rem 3rem; }
+            .section { padding: 4rem 1.5rem; }
+            .why-inner { grid-template-columns: 1fr; }
+            .why-features { grid-template-columns: 1fr; }
+            .card-container { grid-template-columns: 1fr; }
+            .footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo">FoodDemandAI</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="howItWorks.html">How It Works</a>
+            <a href="contact.html">Contact</a>
+            <a href="learnMore.html">Learn More</a>
+        </nav>
+        <a href="getStarted.html" class="btn-primary">Get Started →</a>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-text">
+            <div class="hero-badge"><span></span> ML-Powered Forecasting</div>
+            <h1>Smart Food Demand <em>Forecasting</em></h1>
+            <p>
+                Accurate time series forecasting of food demand using
+                machine learning and deep learning models to reduce
+                wastage and improve supply chain decisions.
+            </p>
+            <div class="hero-buttons">
+                <a href="viewDemo.html" class="btn-primary">View Demo →</a>
+                <a href="exploreUseCases.html" class="btn-secondary">Explore Use Cases</a>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <div class="image-overlay"></div>
+            <img src="img1.png" alt="Forecast Chart">
+            <div class="img-stats">
+                <div class="stat">
+                    <div class="stat-val">94.2%</div>
+                    <div class="stat-lbl">Accuracy</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">3 Models</div>
+                    <div class="stat-lbl">Ensemble</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">↓32%</div>
+                    <div class="stat-lbl">Wastage Cut</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY THIS APP -->
+    <section class="section why-section">
+        <div class="why-inner">
+            <div>
+                <div class="section-tag">Why This Application?</div>
+                <h2>Traditional Forecasting Falls Short</h2>
+                <p class="why-intro">
+                    Food demand is highly sensitive to seasonality, promotions, and pricing.
+                    Traditional methods often fail to capture complex temporal patterns.
+                    Our system uses advanced time series modeling to provide reliable demand predictions.
+                </p>
+                <div class="why-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-text">
+                            <strong>High Accuracy Predictions</strong>
+                            <p>Ensemble ML models outperform traditional ARIMA by 40% on MAPE metrics.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📉</div>
+                        <div class="feature-text">
+                            <strong>Reduce Wastage</strong>
+                            <p>Optimize inventory levels and prevent over-ordering with smart predictions.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <strong>Real-Time Insights</strong>
+                            <p>Get actionable forecasts instantly for better supply chain decisions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section how-section">
+        <div class="section-tag">How It Works</div>
+        <h2>Three Steps to Smarter Forecasting</h2>
+
+        <div class="card-container">
+            <div class="card">
+                <span class="card-number">01</span>
+                <span class="card-icon">📊</span>
+                <h3>Data Collection</h3>
+                <p>
+                    Historical food order data including prices, promotions,
+                    and fulfillment center information is ingested and cleaned automatically.
+                </p>
+            </div>
+
+            <div class="card">
+                <span class="card-number">02</span>
+                <span class="card-icon">⚙️</span>
+                <h3>Feature Engineering</h3>
+                <p>
+                    Lag features and exponentially weighted moving averages
+                    capture temporal dependencies and seasonal patterns for each SKU.
+                </p>
+            </div>
+
+            <div class="card">
+                <span class="card-number">03</span>
+                <span class="card-icon">🤖</span>
+                <h3>Forecasting Models</h3>
+                <p>
+                    Machine learning models such as Random Forest, CatBoost, and LightGBM are
+                    ensembled to predict future food demand with high accuracy.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">FoodDemandAI</div>
+        <p>© 2026 FoodDemandAI · Time Series Forecasting Project</p>
+        <p>Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" d

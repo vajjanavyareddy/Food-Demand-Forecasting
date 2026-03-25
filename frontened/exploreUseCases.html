@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Explore Use Cases | Smart Food Demand Forecasting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #0b0f0e;
+            --surface:   #111715;
+            --card:      #161d1b;
+            --border:    rgba(255,255,255,0.07);
+            --accent:    #2dff8f;
+            --accent2:   #00c9ff;
+            --text:      #e8f0ec;
+            --muted:     #7a9087;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.75;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 68px;
+            background: rgba(11,15,14,0.82);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav { display: flex; gap: 0.25rem; }
+
+        nav a {
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+        nav a.active { color: var(--accent); background: rgba(45,255,143,0.06); }
+
+        .btn-nav {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .btn-nav:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+            padding: 140px 5rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            width: 520px; height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,201,255,0.08) 0%, transparent 70%);
+            top: -40px; right: 6%;
+            pointer-events: none;
+        }
+        .page-hero::after {
+            content: '';
+            position: absolute;
+            width: 360px; height: 360px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45,255,143,0.07) 0%, transparent 70%);
+            bottom: -30px; left: -60px;
+            pointer-events: none;
+        }
+
+        .page-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.5s ease both 0.05s;
+        }
+
+        .page-hero h1 {
+            font-family: var(--font-head);
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.55s ease both 0.15s;
+        }
+        .page-hero h1 em {
+            font-style: normal;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            font-weight: 300;
+            max-width: 540px;
+            position: relative; z-index: 2;
+            animation: fadeUp 0.55s ease both 0.25s;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 5rem;
+        }
+
+        /* ── MAIN GRID ── */
+        .usecases-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4.5rem 5rem 3rem;
+        }
+
+        /* 2-col grid for first 4 cards, last card full-width */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* ── USE CASE CARD ── */
+        .case-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+            animation: fadeUp 0.6s ease both;
+        }
+        .case-card:nth-child(1) { animation-delay: 0.10s; }
+        .case-card:nth-child(2) { animation-delay: 0.18s; }
+        .case-card:nth-child(3) { animation-delay: 0.26s; }
+        .case-card:nth-child(4) { animation-delay: 0.34s; }
+        .case-card:nth-child(5) { animation-delay: 0.42s; grid-column: span 2; }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .case-card:hover {
+            border-color: rgba(45,255,143,0.22);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 52px rgba(0,0,0,0.35);
+        }
+        .case-card:hover::before { opacity: 1; }
+
+        /* last card (sustainability) gets a special gradient bg */
+        .case-card.featured {
+            background: linear-gradient(135deg, rgba(45,255,143,0.05) 0%, rgba(0,201,255,0.05) 100%);
+            border-color: rgba(45,255,143,0.12);
+        }
+        .case-card.featured:hover {
+            border-color: rgba(45,255,143,0.3);
+        }
+
+        .case-card.featured .card-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* card icon */
+        .card-icon {
+            font-size: 1.6rem;
+            width: 3rem; height: 3rem;
+            background: rgba(45,255,143,0.08);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .case-card h2 {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+
+        .case-card p {
+            font-size: 0.875rem;
+            color: var(--muted);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        /* list */
+        .case-card ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .case-card ul li {
+            font-size: 0.84rem;
+            color: var(--muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-weight: 300;
+        }
+        .case-card ul li::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            margin-top: 0.52rem;
+        }
+
+        /* highlight box */
+        .highlight-box {
+            background: rgba(45,255,143,0.05);
+            border: 1px solid rgba(45,255,143,0.15);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-top: 1.1rem;
+            font-size: 0.84rem;
+            color: var(--muted);
+            font-weight: 300;
+            line-height: 1.65;
+            font-style: italic;
+        }
+
+        /* ── BACK HOME ── */
+        .back-home {
+            text-align: center;
+            padding: 3.5rem 0 5rem;
+        }
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0b0f0e;
+            background: var(--accent);
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.6rem;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .home-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(45,255,143,0.3);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer p { font-size: 0.8rem; color: var(--muted); }
+        .footer-logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .navbar { padding: 0 1.5rem; }
+            nav { display: none; }
+            .page-hero { padding: 100px 1.5rem 3rem; }
+            .divider { margin: 0 1.5rem; }
+            .usecases-container { padding: 3rem 1.5rem 1.5rem; }
+            .cases-grid { grid-template-columns: 1fr; }
+            .case-card:nth-child(5) { grid-column: span 1; }
+            .case-card.featured .card-inner { grid-template-columns: 1fr; gap: 1rem; }
+            .footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 2rem 1.5rem; }
+            .back-home { padding: 2.5rem 0 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="index.html" class="logo">FoodDemandAI</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="howItWorks.html">How It Works</a>
+            <a href="contact.html">Contact</a>
+            <a href="learnMore.html">Learn More</a>
+        </nav>
+        <a href="#" class="btn-nav">Get Started →</a>
+    </header>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <div class="page-tag">Applications</div>
+        <h1>Real-World <em>Use Cases</em> of Food Demand Forecasting</h1>
+        <p>Discover how intelligent demand forecasting transforms operations across restaurants, supply chains, retail, and beyond.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- USE CASES GRID -->
+    <div class="usecases-container">
+        <div class="cases-grid">
+
+            <!-- Restaurants -->
+            <div class="case-card">
+                <div class="card-icon">🍽️</div>
+                <h2>Restaurants & Cloud Kitchens</h2>
+                <p>
+                    Restaurants and cloud kitchens face daily challenges in managing
+                    perishable ingredients while meeting fluctuating customer demand.
+                    Accurate forecasting helps optimize preparation planning and reduce waste.
+                </p>
+                <ul>
+                    <li>Predict daily meal demand</li>
+                    <li>Optimize raw material purchasing</li>
+                    <li>Reduce food spoilage</li>
+                    <li>Improve kitchen efficiency</li>
+                </ul>
+                <div class="highlight-box">
+                    Smart forecasting ensures the right quantity is prepared at the right time.
+                </div>
+            </div>
+
+            <!-- Catering -->
+            <div class="case-card">
+                <div class="card-icon">🎉</div>
+                <h2>Catering & Event Management</h2>
+                <p>
+                    Catering businesses must accurately estimate food quantities
+                    for events to avoid losses or shortages.
+                </p>
+                <ul>
+                    <li>Estimate guest-based meal demand</li>
+                    <li>Plan bulk food production</li>
+                    <li>Reduce over-preparation</li>
+                    <li>Improve event profitability</li>
+                </ul>
+            </div>
+
+            <!-- Supply Chain -->
+            <div class="case-card">
+                <div class="card-icon">🚚</div>
+                <h2>Supply Chain & Fulfillment Centers</h2>
+                <p>
+                    Fulfillment centers distribute meals across multiple locations.
+                    Forecasting supports efficient inventory distribution and logistics planning.
+                </p>
+                <ul>
+                    <li>Demand-based inventory allocation</li>
+                    <li>Reduced stockouts</li>
+                    <li>Optimized warehouse storage</li>
+                    <li>Improved last-mile delivery planning</li>
+                </ul>
+                <div class="highlight-box">
+                    Better forecasts lead to smoother supply chain coordination.
+                </div>
+            </div>
+
+            <!-- Retail -->
+            <div class="case-card">
+                <div class="card-icon">🛒</div>
+                <h2>Grocery & Retail Food Chains</h2>
+                <p>
+                    Retailers experience seasonal and promotional demand spikes.
+                    Time-series forecasting helps manage inventory during peak periods.
+                </p>
+                <ul>
+                    <li>Handle festival and seasonal demand</li>
+                    <li>Optimize promotional pricing strategies</li>
+                    <li>Reduce expired stock</li>
+                    <li>Improve revenue forecasting</li>
+                </ul>
+            </div>
+
+            <!-- Sustainability — full width featured -->
+            <div class="case-card featured">
+                <div class="card-inner">
+                    <div>
+                        <div class="card-icon">🌱</div>
+                        <h2>Sustainability & Waste Reduction</h2>
+                        <p>
+                            Food wastage significantly impacts both the economy and the environment.
+                            Intelligent demand forecasting contributes to sustainable supply chain practices.
+                        </p>
+                        <div class="highlight-box">
+                            Data-driven forecasting supports both profitability and sustainability.
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Minimize excess production</li>
+                        <li>Lower carbon footprint</li>
+                        <li>Support sustainable sourcing</li>
+                        <li>Enhance operational efficiency</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BACK HOME -->
+    <div class="back-home">
+        <a href="index.html" class="home-btn">← Go to Home</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">FoodDemandAI</div>
+        <p>© 2026 FoodDemandAI · Time Series Forecasting Project</p>
+        <p>Contact: yourmail@example.com</p>
+    </footer>
+
+</body>
+</html>
