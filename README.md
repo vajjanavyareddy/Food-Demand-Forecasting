@@ -1,5 +1,6 @@
 # Food-Demand-Forecasting
-Smart Food Demand Forecasting
+A machine learning–based system that predicts future food demand using historical data to improve inventory planning and reduce wastage.
+
 # About the Project
 
 Food demand in meal delivery services changes frequently due to pricing, promotions, and customer behavior. Predicting this demand accurately is important because food is perishable — overestimation leads to wastage, and underestimation leads to shortages.
