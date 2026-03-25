@@ -11,10 +11,12 @@ This project builds a machine learning-based system that predicts future food de
 The system follows a simple pipeline:
 
 1️⃣ Data Preparation
+
 Multiple datasets such as meal details, fulfillment center information, and historical orders are combined into a single dataset.
 Unnecessary noise is removed, and the data is prepared for modeling.
 
 2️⃣ Learning Demand Patterns
+
 Instead of using raw data directly, the system creates meaningful features such as:
 
 Previous week demand (lag features)
@@ -25,6 +27,7 @@ Time-based patterns
 These features help the model understand how demand evolves over time.
 
 3️⃣ Model Training
+
 Different machine learning models are trained and compared:
 
 Random Forest
@@ -34,6 +37,7 @@ LightGBM
 Each model learns how different factors affect food demand.
 
 4️⃣ Model Evaluation
+
 The models are tested using standard regression metrics like:
 
 MAE (average error)
@@ -59,9 +63,9 @@ The system then generates future demand predictions step-by-step.
 
 The final model achieves:
 
-Strong prediction accuracy
-Reliable short-term forecasting
-Better handling of demand fluctuations
+Strong prediction accuracy,
+Reliable short-term forecasting,
+Better handling of demand fluctuations.
 
 This shows that machine learning can significantly improve decision-making in food supply chains.
 
